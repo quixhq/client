@@ -1,12 +1,28 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-
+import { io, Socket } from "socket.io-client";
+import { SOCKET_SERVER_URL } from "@/SocketContext";
 const Quiz = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const { quizData, uuid } = location.state || {};
 
+  const socket: Socket = io(SOCKET_SERVER_URL); // adjust URL as needed
+
+useEffect(() => {
+  if (socket) {
+    console.log("Quiz Socket On")
+    socket.on("next-question", ({ questionId, decryptionKey }) => {
+      console.log(`Received next question: ${questionId} with key: ${decryptionKey}`);
+      // Update state or UI with the new question if needed
+    });
+  }
+
+  return () => {
+    socket.off("next-question");
+  };
+}, [socket]);
   useEffect(() => {
     if (!quizData) {
       // If someone tries to open /quiz directly without joining

@@ -14,7 +14,9 @@ export const useSocket = () => useContext(SocketContext);
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
 
+  
   useEffect(() => {
+    
     const newSocket = io(SOCKET_SERVER_URL);
     setSocket(newSocket);
 
