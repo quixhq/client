@@ -13,8 +13,13 @@ const Quiz = () => {
 useEffect(() => {
   if (socket) {
     console.log("Quiz Socket On")
-    socket.on("next-question", ({ questionId, decryptionKey }) => {
-      console.log(`Received next question: ${questionId} with key: ${decryptionKey}`);
+    socket.on("next-question", ({ questionId, decryptionKey,timestamp }) => {
+      if(!timestamp){
+        console.error("Timestamp is missing")
+      }
+      const receivedTime = Date.now(); // Current client time
+      const latency = receivedTime - timestamp;
+      console.log(`Received next question: ${questionId} with key: ${decryptionKey}. Latency: ${latency}ms`);
       // Update state or UI with the new question if needed
     });
   }
